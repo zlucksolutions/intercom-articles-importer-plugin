@@ -1,0 +1,134 @@
+.menu-icon-zl_intercom_article div img{
+    width: 100%;
+    height: auto;
+    max-width: 70%;
+    padding: 0.9em 0 0 !important;
+}
+
+.zl-button>p:nth-child(2n) {
+    margin-left: 10px;
+}
+
+.zl-button p.submit {
+    float: left;
+}
+
+.zl-button::after {
+    clear: both;
+}
+
+form.zl-admin-form .form-field>label {
+    padding: 3px 0px 8px 0px;
+}
+
+.zl-intercom-setting {
+    background: #FFFFFF;
+    padding: 10px;
+    border: 1px solid #ece9e9;
+    -webkit-box-shadow: 5px 5px 10px #bfbfbf;
+    -moz-box-shadow: 5px 5px 10px #bfbfbf;
+    box-shadow: 5px 5px 10px #bfbfbf;
+}
+
+.zl-button,
+.zl-intercom-setting .form-field {
+    padding-left: 7px;
+}
+
+.zl-button div {
+    clear: both;
+}
+
+.zl-button p.submit {
+    padding-bottom: 10px;
+}
+
+.zl-button,
+.zl-intercom-setting .form-field {
+    /* background: #ececec; */
+    padding-left: 7px;
+    /* border-bottom: 3px solid #dedede; */
+}
+
+.zl-intercom-setting .form-field select {
+    margin-bottom: 7px;
+}
+
+.zl-intercom-setting .form-field:last-child {
+    border-bottom: unset;
+}
+
+/* Tool tip icon start*/
+.hint {
+    display: inline-block;
+    position: relative;
+    margin-left: 0.5em;
+    /*  margin-top: 0.3em; */
+}
+
+/* background style for 'i' */
+.hint-icon {
+    background: #a5acb5;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-block;
+    /* font-style: normal; */
+    font-family: "Libre Baskerville";
+    height: 20px;
+    /* line-height: 0.9em; */
+    line-height: 18px;
+    text-align: center;
+    width: 20px;
+}
+
+/* hint icon hover style */
+.hint-icon:hover {
+    background: #1170be;
+    color: #fff;
+}
+
+/* Displays the hint. important! Do not remove. */
+.hint:hover .hint-description,
+.hint:focus .hint-description {
+    display: inline-block;
+}
+
+/* position of the hint  */
+.hint-description {
+    display: none;
+    background: #f6f8fa;
+    border: 1px solid #a5acb5;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #000;
+    font-weight: 500;
+    padding: 1em;
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 250px;
+    z-index: 9999;
+    transform: translateX(-50%);
+    padding: 7px 10px !important;
+    line-height: 1.3;
+}
+
+/* styling for the arrow */
+.hint-description:before,
+.hint-description:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -21px;
+    border-style: solid;
+    border-width: 10px 10px 10px 10px;
+    border-color: #a5acb5 transparent transparent transparent;
+    transform: translateX(-50%);
+}
+
+/* overlay styling */
+.hint-description:after {
+    left: 50%;
+    border-top-color: #f6f8fa;
+    bottom: -20px;
+}
