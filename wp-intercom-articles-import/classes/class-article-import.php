@@ -137,6 +137,8 @@ class Intercom_Article_Import_Handler
 
         $args = array(
             'post_type' => $this->post_type,
+            'post_status'    => array('publish', 'draft'),
+            'posts_per_page' => -1,
             'meta_query' => array(
                 array(
                     'key' => 'zl_intercom_id',
