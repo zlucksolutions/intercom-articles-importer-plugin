@@ -10,7 +10,7 @@ class ZIAI_CronJob {
 	public static function ziai_cronstarter_activation()
 	{
 		// create a scheduled event (if it does not exist already)
-		$cron_start_time = get_option('zl_ziai_cron_start_time');
+		$cron_start_time = get_option('ziai_cron_start_time');
 		if ($cron_start_time == '') {
 			self::ziai_cronstarter_deactivate();
 			return false;
@@ -33,7 +33,7 @@ class ZIAI_CronJob {
 	// add cron interval
 	public static function ziai_cron_add_minute($schedules)
 	{
-		$cron_time = get_option('zl_ziai_cron_time');
+		$cron_time = get_option('ziai_cron_time');
 		$cron_time = ($cron_time > 0) ? $cron_time : 0;
 		if ($cron_time <= 0) {
 			self::ziai_cronstarter_deactivate();

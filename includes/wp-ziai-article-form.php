@@ -13,13 +13,13 @@
                                 <form method="post" action="" class="validate zl-admin-form">
                                     <div class="zl-ziai-setting zl-setting-2">
                                         <div class="form-field form-required term-name-wrap">
-                                            <label for="zl_access_token"><b><?php _e('Access Token', 'ziai-articles'); ?></b>
+                                            <label for="ziai_access_token"><b><?php _e('Access Token', 'ziai-articles'); ?></b>
                                                 <div class="hint">
                                                     <i class="hint-icon">i</i>
                                                     <div class="hint-description"><?php _e('Find details on how to find your Access Token <a href="https://developers.intercom.com/building-apps/docs/authentication-types#section-access-tokens" target="_blank">here.</a>', 'ziai-articles'); ?></div>
                                                 </div>
                                             </label>
-                                            <input name="zl_access_token" id="zl_access_token" type="text" value="<?php echo $token; ?>" aria-required="true" required/>
+                                            <input name="ziai_access_token" id="ziai_access_token" type="text" value="<?php echo $token; ?>" aria-required="true" required/>
                                         </div>
                                     </div>
                                     <br>
@@ -45,22 +45,22 @@
                                             <?php wp_dropdown_users(array('name' => 'zl_default_author', 'selected' => $zl_default_author)); ?>
                                         </div>
                                         <div class="form-field form-required term-name-wrap">
-                                            <label for="zl_ziai_cron_start_time"><b>Automatic Cron Start time</b><small><i> (for when to execute the event.)</i></small>
+                                            <label for="ziai_cron_start_time"><b>Automatic Cron Start time</b><small><i> (for when to execute the event.)</i></small>
                                                 <div class="hint">
                                                     <i class="hint-icon">i</i>
                                                     <div class="hint-description"><?php _e('Automatic cron will start from this time and will continue running at defined intervals as below.', 'ziai-articles'); ?></div>
                                                 </div>
                                             </label>
-                                            <input name="zl_ziai_cron_start_time" id="zl_ziai_cron_start_time" type="time" value="<?php echo $cron_start_time ?>" aria-required="true" required="required" />
+                                            <input name="ziai_cron_start_time" id="ziai_cron_start_time" type="time" value="<?php echo $cron_start_time ?>" aria-required="true" required="required" />
                                         </div>
                                         <div class="form-field form-required term-name-wrap">
-                                            <label for="zl_ziai_cron_time"><b>Run Cron to fetch Automatic at every X hours - </b><small><i> (Eg. - for every 1 hour 30 minutes - enter 1.5)</i></small>
+                                            <label for="ziai_cron_time"><b>Run Cron to fetch Automatic at every X hours - </b><small><i> (Eg. - for every 1 hour 30 minutes - enter 1.5)</i></small>
                                                 <div class="hint">
                                                     <i class="hint-icon">i</i>
                                                     <div class="hint-description"><?php _e('The Automatic Cron will run at every X hours - (eg. every 2 hours).', 'ziai-articles'); ?></div>
                                                 </div>
                                             </label>
-                                            <input name="zl_ziai_cron_time" id="zl_ziai_cron_time" type="number" min="0" step="any" value="<?php echo $cron_time ?>" aria-required="true" required="required" />
+                                            <input name="ziai_cron_time" id="ziai_cron_time" type="number" min="0" step="any" value="<?php echo $cron_time ?>" aria-required="true" required="required" />
                                         </div>
                                         <br>
                                         <div class="zl-button">

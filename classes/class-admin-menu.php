@@ -32,27 +32,27 @@ class ZIAI_Modules {
             $category                   = get_option('zl_category_get');
             $taxonomies                 = get_option('zl_taxonomy_get');
             $zl_default_author          = get_option('zl_default_author');
-            $cron_time                  = get_option('zl_ziai_cron_time');
-            $cron_start_time            = get_option('zl_ziai_cron_start_time');
+            $cron_time                  = get_option('ziai_cron_time');
+            $cron_start_time            = get_option('ziai_cron_start_time');
             if(!empty($_POST) && (isset($_POST['runnow']) || isset($_POST['savechanges']))){
-                $zl_access_token            = sanitize_text_field($_POST['zl_access_token']);
+                $ziai_access_token          = sanitize_text_field($_POST['ziai_access_token']);
                 $post_type                  = sanitize_text_field($_POST['zl_post_type_get']);
                 $category                   = sanitize_text_field($_POST['zl_category_get']);
                 $taxonomies                 = sanitize_text_field($_POST['zl_taxonomie']);
                 $zl_default_author          = sanitize_text_field($_POST['zl_default_author']);
-                $cron_time_u                = sanitize_text_field($_POST['zl_ziai_cron_time']);
+                $cron_time_u                = sanitize_text_field($_POST['ziai_cron_time']);
                 $cron_time_u                = round(($cron_time_u * 2), 0) / 2;
-                if ($cron_start_time != $_POST['zl_ziai_cron_start_time'] || $cron_time_u != $cron_time) {
+                if ($cron_start_time != $_POST['ziai_cron_start_time'] || $cron_time_u != $cron_time) {
                     ZIAI_CronJob::ziai_cronstarter_deactivate();
                 }
-                $cron_start_time = sanitize_text_field($_POST['zl_ziai_cron_start_time']);
+                $cron_start_time = sanitize_text_field($_POST['ziai_cron_start_time']);
                 $cron_time = $cron_time_u;
-                update_option('zl_ziai_access_token', $zl_access_token);
+                update_option('zl_ziai_access_token', $ziai_access_token);
                 update_option('zl_post_type_get', $post_type);
                 update_option('zl_category_get', $category);
                 update_option('zl_taxonomy_get', $taxonomies);
-                update_option('zl_ziai_cron_time', $cron_time);
-                update_option('zl_ziai_cron_start_time', $cron_start_time);
+                update_option('ziai_cron_time', $cron_time);
+                update_option('ziai_cron_start_time', $cron_start_time);
                 update_option('zl_default_author', $zl_default_author);
                 $errormsg = "Articles settings updated successfully!!";
                 if (isset($_POST['runnow'])) {
