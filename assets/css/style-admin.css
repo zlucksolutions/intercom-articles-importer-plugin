@@ -1,4 +1,4 @@
-.menu-icon-zl_intercom_article div img{
+.menu-icon-zl_ziai_article div img{
     width: 100%;
     height: auto;
     max-width: 70%;
@@ -21,7 +21,7 @@ form.zl-admin-form .form-field>label {
     padding: 3px 0px 8px 0px;
 }
 
-.zl-intercom-setting {
+.zl-ziai-setting {
     background: #FFFFFF;
     padding: 10px;
     border: 1px solid #ece9e9;
@@ -31,7 +31,7 @@ form.zl-admin-form .form-field>label {
 }
 
 .zl-button,
-.zl-intercom-setting .form-field {
+.zl-ziai-setting .form-field {
     padding-left: 7px;
 }
 
@@ -44,17 +44,17 @@ form.zl-admin-form .form-field>label {
 }
 
 .zl-button,
-.zl-intercom-setting .form-field {
+.zl-ziai-setting .form-field {
     /* background: #ececec; */
     padding-left: 7px;
     /* border-bottom: 3px solid #dedede; */
 }
 
-.zl-intercom-setting .form-field select {
+.zl-ziai-setting .form-field select {
     margin-bottom: 7px;
 }
 
-.zl-intercom-setting .form-field:last-child {
+.zl-ziai-setting .form-field:last-child {
     border-bottom: unset;
 }
 

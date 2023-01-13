@@ -7,6 +7,7 @@
  * Version: 1.0
  * Author: Zluck Solutions
  * Author URI: https://profiles.wordpress.org/zluck
+ * Text Domain: ziai-articles
  * Domain Path: /languages
  **/
 
@@ -18,7 +19,7 @@ define("ZIAI_FILE_PATH", plugin_dir_path( __FILE__ ));
 
 include_once('classes/class-admin-menu.php');
 include_once('classes/class-article-import.php');
-include_once('classes/class-intercom-cron.php');
+include_once('classes/class-ziai-cron.php');
 
 ZIAI_Modules::ziai_init();
 ZIAI_CronJob::ziai_cron_init();

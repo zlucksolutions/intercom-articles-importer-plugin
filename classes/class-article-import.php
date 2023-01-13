@@ -5,8 +5,8 @@ class ZIAI_Handler
     private $post_author;
     private $post_type;
     private $taxonomy;
-    private $intercom_added = 0;
-    private $intercom_imported = array();
+    private $ziai_added = 0;
+    private $ziai_imported = array();
 
     public function __construct($zl_external_article)
     {
@@ -53,9 +53,9 @@ class ZIAI_Handler
             }
             return array(
                 'status'   => 'success',
-                'message'  => 'Intercom settings updated successfully!!',
-                'count'    => $this->intercom_added,
-                'episodes' => $this->intercom_imported,
+                'message'  => 'Articles settings updated successfully!!',
+                'count'    => $this->ziai_added,
+                'episodes' => $this->ziai_imported,
             );
         }else{
             return array(
@@ -80,8 +80,8 @@ class ZIAI_Handler
             wp_set_post_terms($post_id, $post_data['post_category'][0], $this->taxonomy);
         }
         
-        $this->intercom_added++;
-        $this->intercom_imported[] = $post_data['post_title'];
+        $this->ziai_added++;
+        $this->ziai_imported[] = $post_data['post_title'];
     }
 
     public function ziai_get_post_data($article)
@@ -110,7 +110,7 @@ class ZIAI_Handler
         $post_data['post_type']     = $this->post_type;
         $post_data['post_category'] = array($term_id);
         $post_data['meta_input']    = array(
-            'zl_intercom_id' => $article['id'],
+            'zl_ziai_id' => $article['id'],
         );
 
         $args = array(
@@ -118,7 +118,7 @@ class ZIAI_Handler
             'post_status' => array('publish', 'draft'),
             'meta_query' => array(
                 array(
-                    'key' => 'zl_intercom_id',
+                    'key' => 'zl_ziai_id',
                     'value' => $article['id'],
                     'compare' => '=',
                 )
