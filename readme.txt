@@ -51,6 +51,7 @@
 	== Frequently Asked Questions ==
 
 	1. Do you import intercom tags too? - Nope. Right now intercom doesn't provide tags to be imported, that support will be added really soon.
+	2. The articles page does not work and display the page not found? - Update your permalink once after sync the articles. 
 
 
 	= 1.0 =
