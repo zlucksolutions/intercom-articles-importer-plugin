@@ -1,32 +1,32 @@
 <?php
-class ZL_Intercom_Article_Import_Modules {
-    public static function init() {
-        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'intercom_load_admin_style' ) );
-        add_action( 'admin_menu', array( __CLASS__, 'zl_register_my_custom_menu_page' ) );
-        add_action('wp_ajax_zl_imtercom_category_get', array( __CLASS__, 'zl_imtercom_category_get' ));
-        add_action('wp_ajax_nopriv_zl_imtercom_category_get', array( __CLASS__, 'zl_imtercom_category_get' ));
-        add_action('init', array( __CLASS__, 'zl_intercom_register_post_type_articles' ));
+class ZIAI_Modules {
+    public static function ziai_init() {
+        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'ziai_load_admin_style' ) );
+        add_action( 'admin_menu', array( __CLASS__, 'ziai_register_menu_page' ) );
+        add_action('wp_ajax_ziai_category_get', array( __CLASS__, 'ziai_category_get' ));
+        add_action('wp_ajax_nopriv_ziai_category_get', array( __CLASS__, 'ziai_category_get' ));
+        add_action('init', array( __CLASS__, 'ziai_register_post_type' ));
     }
 
-    public static function zl_register_my_custom_menu_page() {
+    public static function ziai_register_menu_page() {
         add_submenu_page(
             'edit.php?post_type=zl_intercom_article',
             'Settings',
             'Settings',
             'manage_options',
             'intercom-articles',
-            array( __CLASS__, 'zl_intercom_articles_import' )
+            array( __CLASS__, 'ziai_admin_show_data' )
         );
     }
 
-    public static function intercom_load_admin_style() {
-        wp_enqueue_style( 'intercom_admin_style_css', INTERCOM_FILE_URL . 'assets/css/style-admin.css');
-        wp_enqueue_script('zl_admin_custom_script', INTERCOM_FILE_URL . 'assets/js/zl-admin-custom.js', array('jquery'), '1.0', true);
+    public static function ziai_load_admin_style() {
+        wp_enqueue_style( 'intercom_admin_style_css', ZIAI_FILE_URL . 'assets/css/style-admin.css');
+        wp_enqueue_script('zl_admin_custom_script', ZIAI_FILE_URL . 'assets/js/zl-admin-custom.js', array('jquery'), '1.0', true);
         wp_localize_script('zl_admin_custom_script', 'wpAjax', array('ajaxUrl' => admin_url('admin-ajax.php')));
     }
 
-    public static function zl_intercom_articles_import() {
-        if ( is_file(INTERCOM_FILE_PATH . 'includes/wp-intercom-article-form.php') ) {
+    public static function ziai_admin_show_data() {
+        if ( is_file(ZIAI_FILE_PATH . 'includes/wp-intercom-article-form.php') ) {
             $token                      = get_option('zl_intercom_access_token');
             $post_type                  = get_option('zl_post_type_get');
             $category                   = get_option('zl_category_get');
@@ -43,7 +43,7 @@ class ZL_Intercom_Article_Import_Modules {
                 $cron_time_u                = sanitize_text_field($_POST['zl_intercom_cron_time']);
                 $cron_time_u                = round(($cron_time_u * 2), 0) / 2;
                 if ($cron_start_time != $_POST['zl_intercom_cron_start_time'] || $cron_time_u != $cron_time) {
-                    ZLIntercom_Article_Import_CronJob::zl_intercom_cronstarter_deactivate();
+                    ZIAI_CronJob::ziai_cronstarter_deactivate();
                 }
                 $cron_start_time = sanitize_text_field($_POST['zl_intercom_cron_start_time']);
                 $cron_time = $cron_time_u;
@@ -62,8 +62,8 @@ class ZL_Intercom_Article_Import_Modules {
                         "import_author" => $zl_default_author,
                         "import_taxonomy" => $taxonomies,
                     );
-                    $importer_article 	= new Intercom_Article_Import_Handler($arry);
-                    $response           = $importer_article->import_intercom_article();
+                    $importer_article 	= new ZIAI_Handler($arry);
+                    $response           = $importer_article->ziai_import_article();
                     if ($response['status'] == 'errors') {
                         $errormsg = $response['message'];
                     } else {
@@ -73,12 +73,12 @@ class ZL_Intercom_Article_Import_Modules {
                     }
                 }
             }
-            include_once INTERCOM_FILE_PATH . 'includes/wp-intercom-article-form.php';
+            include_once ZIAI_FILE_PATH . 'includes/wp-intercom-article-form.php';
         }
     }
 
     //Post Category Get
-    public static function zl_imtercom_category_get()
+    public static function ziai_category_get()
     {
         $post_type      = 'zl_intercom_article';
         $taxonomies     = get_object_taxonomies($post_type, 'objects');
@@ -99,7 +99,7 @@ class ZL_Intercom_Article_Import_Modules {
     }
 
     //custom Post Type
-    public static function zl_intercom_register_post_type_articles()
+    public static function ziai_register_post_type()
     {
         $cpt_name = 'Intercom Article';
         $single_item_slug   = 'intercom-article';
@@ -125,7 +125,7 @@ class ZL_Intercom_Article_Import_Modules {
             'not_found' => __('No ' . $cpt_name . ' found.'),
         );
         $args = array(
-            'menu_icon' => plugins_url( 'wp-intercom-articles-import/images/intercom-svg.svg' ),
+            'menu_icon' => plugins_url( 'images/intercom-svg.svg', __DIR__ ),
             'supports' => $supports,
             'labels' => $labels,
             'public' => true,

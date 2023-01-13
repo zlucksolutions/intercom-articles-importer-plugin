@@ -1,5 +1,4 @@
 <?php
-class ZLIntercom_Article_Import_CronJob {
 	public static function cron_init() {
         add_action('wp', array( __CLASS__, 'zl_intercom_cronstarter_activation' ));
 		add_filter('cron_schedules', array( __CLASS__, 'zl_intercom_cron_add_minute' ));

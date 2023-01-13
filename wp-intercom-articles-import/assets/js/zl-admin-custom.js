@@ -11,7 +11,7 @@ jQuery(document).ready(function() {
         jQuery.ajax({
             type: "POST",
             url: wpAjax.ajaxUrl,
-            data: { action: "zl_imtercom_category_get", post_type: post_type },
+            data: { action: "ziai_category_get", post_type: post_type },
             beforeSend: function () {
                 jQuery(".zl-ajax-loader").css({ display: "inline-block" });
             },

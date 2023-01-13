@@ -1,5 +1,5 @@
 <?php
-class Intercom_Article_Import_Handler
+class ZIAI_Handler
 {
     private $access_token;
     private $post_author;
@@ -16,54 +16,32 @@ class Intercom_Article_Import_Handler
         $this->taxonomy     = $zl_external_article['import_taxonomy'];
     }
 
-    public function import_intercom_article()
+    public function ziai_import_article()
     {
-        
-        $curl = curl_init();
+        $response = wp_remote_get( 'https://api.intercom.io/articles/?per_page=-1',
+            array(
+                'method' => 'GET',
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $this->access_token
+                )
+            )
+        );
 
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.intercom.io/articles/?per_page=-1',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer '.$this->access_token.''
-        ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        $response = (array) json_decode($response);
+        $response = (array) json_decode($response['body']);
         if(!isset($response['errors'])){
             foreach($response['data'] as $data){
                 $data = (array) $data;
-                $curl = curl_init();
 
-                curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer '.$this->access_token.''
-                ),
-                ));
-
-                $collection = curl_exec($curl);
-
-                curl_close($curl);
-                $collection = (array) json_decode($collection);
-
+                $collection = wp_remote_get( 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
+                    array(
+                        'method' => 'GET',
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $this->access_token
+                        )
+                    )
+                );
+                
+                $collection = (array) json_decode($collection['body']);
                 $article = array(
                     'id' => $data['id'],
                     'title' => $data['title'],
@@ -71,7 +49,7 @@ class Intercom_Article_Import_Handler
                     'status'  => $data['state'],
                     'collection' => $collection['name']
                 );
-                $this->create_article($article);
+                $this->ziai_create_article($article);
             }
             return array(
                 'status'   => 'success',
@@ -87,9 +65,9 @@ class Intercom_Article_Import_Handler
         }
     }
 
-    protected function create_article($article)
+    protected function ziai_create_article($article)
     {
-        $post_data  = $this->get_post_data($article);
+        $post_data  = $this->ziai_get_post_data($article);
         $post_id    = wp_insert_post($post_data);
         /**
          * If an error occurring adding a post, continue the loop
@@ -106,7 +84,7 @@ class Intercom_Article_Import_Handler
         $this->intercom_imported[] = $post_data['post_title'];
     }
 
-    public function get_post_data($article)
+    public function ziai_get_post_data($article)
     {
         $term_a      = term_exists($article['collection'], $this->taxonomy);
         $term_a_id   = $term_a['term_id'];
@@ -137,8 +115,7 @@ class Intercom_Article_Import_Handler
 
         $args = array(
             'post_type' => $this->post_type,
-            'post_status'    => array('publish', 'draft'),
-            'posts_per_page' => -1,
+            'post_status' => array('publish', 'draft'),
             'meta_query' => array(
                 array(
                     'key' => 'zl_intercom_id',
