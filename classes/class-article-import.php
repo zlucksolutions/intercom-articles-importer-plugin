@@ -27,11 +27,9 @@ class ZIAI_Handler
             )
         );
 
-        $response = (array) json_decode($response['body']);
+        $response = json_decode($response['body'], true);
         if(!isset($response['errors'])){
             foreach($response['data'] as $data){
-                $data = (array) $data;
-
                 $collection = wp_remote_get( 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
                     array(
                         'method' => 'GET',
@@ -41,7 +39,7 @@ class ZIAI_Handler
                     )
                 );
                 
-                $collection = (array) json_decode($collection['body']);
+                $collection = json_decode($collection['body'], true);
                 $article = array(
                     'id' => $data['id'],
                     'title' => $data['title'],
