@@ -91,7 +91,7 @@ class ZIAI_Modules {
         ));
         foreach ($terms as $term) {
             ?>
-            <option value="<?php echo $term->term_id; ?>" <?php if ($term->term_id == $category) { echo "selected"; } ?>><?php echo $term->name; ?></option>
+            <option value="<?php echo esc_attr($term->term_id); ?>" <?php if ($term->term_id == $category) { echo "selected"; } ?>><?php echo esc_html($term->name); ?></option>
             <?php
         }
         echo '</select><input type="hidden" name="zl_taxonomie" value=' . array_key_first($taxonomies) . '>';
