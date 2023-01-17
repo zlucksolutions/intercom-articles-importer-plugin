@@ -13,17 +13,15 @@
 
 	== Description ==
 
-	Automatic Articles Importer is an easy, quick and advanced plugin to import intercom articles.
-
-	This plugin gives you ability to import the Intercom articles in your website easily. This plugin collects the intercom articles & collections from intercom and import on your website by collection wise.
+	Automatic Articles Importer is an easy, quick and advanced plugin to import intercom articles. This plugin gives you ability to import the Intercom articles in your website easily. This plugin collects the intercom articles & collections from intercom and import on your website by collection wise.
 
 
 	== Key Features ==
 
-	- Scheduled import process
-	- Import intercom articles
-	- Import intercom collection
-	- Sync articles regulary by cron
+	* Scheduled import process
+	* Import intercom articles
+	* Import intercom collection
+	* Sync articles regulary by cron
 
 
 	== Installation ==
@@ -50,9 +48,26 @@
 
 	== Frequently Asked Questions ==
 
-	1. Do you import intercom tags too? - Nope. Right now intercom doesn't provide tags to be imported, that support will be added really soon.
-	2. The articles page does not work and display the page not found? - Update your permalink once after sync the articles. 
+	= Do you import intercom tags too? = 
+	
+	Nope. Right now intercom doesn't provide tags to be imported, that support will be added really soon.
+	
+	= The articles page does not work and display the page not found? = 
+	
+	Update your permalink once after sync the articles. 
 
+	== Screenshots ==
+
+	1. Review the Automatic Articles Settings.
+
+	== Changelog ==
 
 	= 1.0 =
 	* Initial Launch
+
+	== Upgrade Notice ==
+
+	= 1.0 =
+	* Initial Launch. No upgrade notice.
+
+
