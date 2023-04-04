@@ -16,9 +16,71 @@ class ZIAI_Handler
         $this->taxonomy     = $zl_external_article['import_taxonomy'];
     }
 
+    public function get_articles($page=null, $per_page=null){
+        $endpoint = 'https://api.intercom.io/articles/';
+        $params = http_build_query(array(
+            'page' => $page,
+            'per_page' => $per_page
+        ));
+        if($params){
+            $endpoint .= '?'.$params;
+        }
+        $response = wp_remote_get( $endpoint,
+            array(
+                'method' => 'GET',
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $this->access_token
+                )
+            )
+        );
+
+        $response = json_decode($response['body'], true);
+        if(!isset($response['errors'])){
+            $this->ziai_import_articles($response);
+            return $response;
+        }
+    }
+
+    public function ziai_import_articles($response)
+    {
+        if(!isset($response['errors'])){
+            foreach($response['data'] as $data){
+                $collection = wp_remote_get( 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
+                    array(
+                        'method' => 'GET',
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $this->access_token
+                        )
+                    )
+                );
+
+                $collection = json_decode($collection['body'], true);
+                $article = array(
+                    'id' => $data['id'],
+                    'title' => $data['title'],
+                    'content' => $data['body'],
+                    'status'  => $data['state'],
+                    'collection' => $collection['name']
+                );
+                $this->ziai_create_article($article);
+            }
+            return array(
+                'status'   => 'success',
+                'message'  => 'Articles settings updated successfully!!',
+                'count'    => $this->ziai_added,
+                'episodes' => $this->ziai_imported,
+            );
+        }else{
+            return array(
+                'status'   => 'errors',
+                'message'  => $response['errors'][0]->message,
+            );
+        }
+    }
+
     public function ziai_import_article()
     {
-        $response = wp_remote_get( 'https://api.intercom.io/articles/?per_page=-1',
+        $response = wp_remote_get( 'https://api.intercom.io/articles/',
             array(
                 'method' => 'GET',
                 'headers' => array(

@@ -1,31 +1,33 @@
 <?php
 class ZIAI_Modules {
-    public static function ziai_init() {
-        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'ziai_load_admin_style' ) );
-        add_action( 'admin_menu', array( __CLASS__, 'ziai_register_menu_page' ) );
-        add_action('wp_ajax_ziai_category_get', array( __CLASS__, 'ziai_category_get' ));
-        add_action('wp_ajax_nopriv_ziai_category_get', array( __CLASS__, 'ziai_category_get' ));
-        add_action('init', array( __CLASS__, 'ziai_register_post_type' ));
+    public function ziai_init() {
+        add_action( 'admin_enqueue_scripts', array( $this, 'ziai_load_admin_style' ) );
+        add_action( 'admin_menu', array( $this, 'ziai_register_menu_page' ) );
+        add_action('wp_ajax_ziai_category_get', array( $this, 'ziai_category_get' ));
+        add_action('wp_ajax_ziai_bulk_importer_init', array( $this, 'ziai_bulk_importer_init' ));
+        add_action('wp_ajax_ziai_bulk_importer_get_page', array( $this, 'ziai_bulk_importer_get_page' ));
+        add_action('wp_ajax_nopriv_ziai_category_get', array( $this, 'ziai_category_get' ));
+        add_action('init', array( $this, 'ziai_register_post_type' ));
     }
 
-    public static function ziai_register_menu_page() {
+    public function ziai_register_menu_page() {
         add_submenu_page(
             'edit.php?post_type=zl_ziai_article',
             'Settings',
             'Settings',
             'manage_options',
             'ziai-articles',
-            array( __CLASS__, 'ziai_admin_show_data' )
+            array( $this, 'ziai_admin_show_data' )
         );
     }
 
-    public static function ziai_load_admin_style() {
+    public function ziai_load_admin_style() {
         wp_enqueue_style( 'ziai_admin_style_css', ZIAI_FILE_URL . 'assets/css/style-admin.css');
         wp_enqueue_script('zl_admin_custom_script', ZIAI_FILE_URL . 'assets/js/zl-admin-custom.js', array('jquery'), '1.0', true);
         wp_localize_script('zl_admin_custom_script', 'wpAjax', array('ajaxUrl' => admin_url('admin-ajax.php')));
     }
 
-    public static function ziai_admin_show_data() {
+    public function ziai_admin_show_data() {
         if ( is_file(ZIAI_FILE_PATH . 'includes/wp-ziai-article-form.php') ) {
             $token                      = get_option('zl_ziai_access_token');
             $post_type                  = get_option('zl_post_type_get');
@@ -56,12 +58,7 @@ class ZIAI_Modules {
                 update_option('zl_default_author', $zl_default_author);
                 $errormsg = "Articles settings updated successfully!!";
                 if (isset($_POST['runnow'])) {
-                    $arry = array(
-                        "access_token" => $token,
-                        "import_post_type" => $post_type,
-                        "import_author" => $zl_default_author,
-                        "import_taxonomy" => $taxonomies,
-                    );
+                    $arry = $this->get_ziai_options_array();
                     $importer_article 	= new ZIAI_Handler($arry);
                     $response           = $importer_article->ziai_import_article();
                     if ($response['status'] == 'errors') {
@@ -77,8 +74,21 @@ class ZIAI_Modules {
         }
     }
 
+    private function get_ziai_options_array(){
+        $token                      = get_option('zl_ziai_access_token');
+        $post_type                  = get_option('zl_post_type_get');
+        $taxonomies                 = get_option('zl_taxonomy_get');
+        $zl_default_author          = get_option('zl_default_author');
+        return array(
+            "access_token" => $token,
+            "import_post_type" => $post_type,
+            "import_author" => $zl_default_author,
+            "import_taxonomy" => $taxonomies,
+        );
+    }
+
     //Post Category Get
-    public static function ziai_category_get()
+    public function ziai_category_get()
     {
         $post_type      = 'zl_ziai_article';
         $taxonomies     = get_object_taxonomies($post_type, 'objects');
@@ -98,8 +108,27 @@ class ZIAI_Modules {
         die();
     }
 
+    public function ziai_bulk_importer_init()
+    {
+        $arry = $this->get_ziai_options_array();
+        $importer_article 	= new ZIAI_Handler($arry);
+        $response = $importer_article->get_articles(1, 25);
+        echo json_encode($response);
+        die();
+    }
+
+    public function ziai_bulk_importer_get_page()
+    {
+        $page = $_POST['currentPage'];
+        $arry = $this->get_ziai_options_array();
+        $importer_article 	= new ZIAI_Handler($arry);
+        $response = $importer_article->get_articles($page, 25);
+        echo json_encode($response);
+        die();
+    }
+
     //custom Post Type
-    public static function ziai_register_post_type()
+    public function ziai_register_post_type()
     {
         $cpt_name = 'Automatic Articles Importer';
         $single_item_slug   = 'automatic-article';
@@ -134,7 +163,9 @@ class ZIAI_Modules {
             'has_archive' => true,
             'hierarchical' => true,
         );
+
         register_post_type('zl_ziai_article', $args);
+
         $taxonomys = 'Collection';
         $taxonomyp = 'Collections';
         $taxlabels = array(
@@ -151,6 +182,7 @@ class ZIAI_Modules {
             'search_items' => __('Search ' . $taxonomys),
             'not_found' => __('No ' . $taxonomys . ' found.'),
         );
+
         register_taxonomy('article-cat', array('zl_ziai_article'), array(
             'hierarchical' => true,
             'labels' => $taxlabels,

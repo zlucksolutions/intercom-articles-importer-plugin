@@ -21,5 +21,6 @@ include_once('classes/class-admin-menu.php');
 include_once('classes/class-article-import.php');
 include_once('classes/class-ziai-cron.php');
 
-ZIAI_Modules::ziai_init();
+$ZIAI_Modules  = new ZIAI_Modules();
+$ZIAI_Modules->ziai_init();
 ZIAI_CronJob::ziai_cron_init();
