@@ -44,17 +44,17 @@ jQuery(document).ready(function($) {
             success: function (result) {
                 // makes it <result.pages.total_pages irl
                 result = JSON.parse(result);
-                let currentPage = result.pages.page;
+                let currentPage = result.pages.page+1;
                 let maxPage = result.pages.total_pages; // set the maximum number of pages here
-
+                $( progressBar ).progressbar({
+                    value: (result.pages.page/result.pages.total_pages)*100
+                });
                 function nextPage() {
                     if (currentPage <= maxPage) {
                         bulkImporterNextPage(currentPage, currentPage + 1, function() {
                             currentPage++;
                             nextPage();
                         });
-                    } else {
-                        console.log("All pages processed.");
                     }
                 }
 
@@ -74,15 +74,13 @@ jQuery(document).ready(function($) {
             },
             success: function (result) {
                 result = JSON.parse(result);
-                console.log(result);
                 if (callback) {
                     callback();
                 }
-                console.log((result.pages.page/result.pages.total_pages)*100);
                 $( progressBar ).progressbar({
                     value: (result.pages.page/result.pages.total_pages)*100
                 });
-                if(result.pages.page === 3){
+                if(result.pages.page === result.pages.total_pages){
                     bulkImporterComplete();
                 }
             },
@@ -92,30 +90,10 @@ jQuery(document).ready(function($) {
         });
     }
 
-    /*function bulkImporterNextPage(currentPage, nextPage){
-        $.ajax({
-            type: "POST",
-            url: wpAjax.ajaxUrl,
-            data: {
-                action: "ziai_bulk_importer_get_page",
-                currentPage: currentPage,
-                nextPage: nextPage
-            },
-            beforeSend: function () {
-
-            },
-            success: function (result) {
-                $( progressBar ).progressbar({
-                    value: (result.pages.page/result.pages.totalPages)*100
-                });
-                if(result.pages.page === 3){
-                    bulkImporterComplete();
-                }
-            },
-        });
-    }*/
-
     function bulkImporterComplete(){
         $(bulkImportBtn).toggleClass('disabled');
+        $( progressBar ).progressbar({
+            value: 0
+        });
     }
 });
