@@ -16,7 +16,27 @@ class ZIAI_Handler
         $this->taxonomy     = $zl_external_article['import_taxonomy'];
     }
 
-    public function get_articles($page=null, $per_page=null){
+    public function sync_acticles(){
+        $response = json_decode($this->get_articles(1, 25));
+        $current_page = $response->pages->page+1;
+        $max_page = $response->pages->total_pages;
+        $this->next_page($current_page, $max_page);
+
+        nextPage();
+    }
+
+    private function next_page($current_page, $max_page) {
+        if ($current_page > $max_page) {
+            return;
+        }
+
+        $this->get_articles($current_page, $current_page + 1, function($current_page, $max_page) {
+            $current_page++;
+            $this->next_page($current_page, $max_page);
+        });
+    }
+
+    public function get_articles($page=null, $per_page=null, $callback=false){
         $endpoint = 'https://api.intercom.io/articles/';
         $params = http_build_query(array(
             'page' => $page,
@@ -37,7 +57,11 @@ class ZIAI_Handler
         $response = json_decode($response['body'], true);
         if(!isset($response['errors'])){
             $this->ziai_import_articles($response);
-            return $response;
+            if($callback){
+                $callback($page, $response->pages->total_pages);
+            } else {
+                return $response;
+            }
         }
     }
 
