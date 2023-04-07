@@ -110,10 +110,6 @@ class ZIAI_Handler
      */
     public function is_article_outdated(int $article_id, array $data): bool {
         $article_wp_date_modified = get_post_meta($article_id, 'intercom_updated_at', true);
-        if($data['id'] == 6545905){
-            print_r($data);
-            return true;
-        }
         return ($data['updated_at'] > $article_wp_date_modified);
     }
 
@@ -199,31 +195,32 @@ class ZIAI_Handler
     public function ziai_get_post_data($article)
     {
         $term_a = false;
+        $post_data                  = array();
         if(isset($article['collection'])){
             $term_a      = term_exists($article['collection'], $this->taxonomy);
-        }
-        $term_a_id   = $term_a['term_id'];
-        if(empty($term_a_id)){
-            wp_insert_term(
-                $article['collection'],
-                $this->taxonomy,
-                array(
-                    // 'description'=> 'Some description.',
-                    'slug' => str_replace(" ", "-", $article['collection']),
-                )
-            );
+            $term_a_id   = $term_a['term_id'];
+            if(empty($term_a_id)){
+                wp_insert_term(
+                    $article['collection'],
+                    $this->taxonomy,
+                    array(
+                        // 'description'=> 'Some description.',
+                        'slug' => str_replace(" ", "-", $article['collection']),
+                    )
+                );
+            }
+            $term_a                     = term_exists($article['collection'], $this->taxonomy);
+            $term_id                    = $term_a['term_id'];
+            $post_data['post_category'] = array($term_id);
         }
 
         $status                     = ($article['status'] == 'published') ? $article['status'] = 'publish' : $article['status'];
-        $term_a                     = term_exists($article['collection'], $this->taxonomy);
-        $term_id                    = $term_a['term_id'];
-        $post_data                  = array();
         $post_data['post_content']  = $article['content'];
         $post_data['post_title']    = $article['title'];
         $post_data['post_status']   = $status;
         $post_data['post_author']   = $this->post_author;
         $post_data['post_type']     = $this->post_type;
-        $post_data['post_category'] = array($term_id);
+
         $post_data['meta_input']    = array(
             'zl_ziai_id' => $article['id'],
             'intercom_created_at' => $article['created_at'],
