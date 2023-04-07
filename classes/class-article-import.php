@@ -16,24 +16,23 @@ class ZIAI_Handler
         $this->taxonomy     = $zl_external_article['import_taxonomy'];
     }
 
-    public function sync_acticles(){
-        $response = json_decode($this->get_articles(1, 25));
-        $current_page = $response->pages->page+1;
-        $max_page = $response->pages->total_pages;
-        $this->next_page($current_page, $max_page);
-
-        nextPage();
+    public function sync_articles(){
+        $response = $this->get_articles(1, 25);
+        if($response['pages']['total_pages'] > 1){
+            $this->get_more_articles($response['pages']['page']+1, $response['pages']['total_pages']);
+        }
     }
 
-    private function next_page($current_page, $max_page) {
+    private function get_more_articles($current_page, $max_page) {
         if ($current_page > $max_page) {
             return;
         }
 
-        $this->get_articles($current_page, $current_page + 1, function($current_page, $max_page) {
-            $current_page++;
-            $this->next_page($current_page, $max_page);
-        });
+        $this->get_articles($current_page, $current_page + 1,
+            function($current_page, $max_page) {
+                $current_page++;
+                $this->get_more_articles($current_page, $max_page);
+            });
     }
 
     public function get_articles($page=null, $per_page=null, $callback=false){
@@ -56,45 +55,13 @@ class ZIAI_Handler
 
         $response = json_decode($response['body'], true);
         if(!isset($response['errors'])){
-            $this->ziai_import_articles($response);
+            $imported_articles = $this->ziai_import_articles($response);
             if($callback){
-                $callback($page, $response->pages->total_pages);
+                $callback($page, $response['pages']['total_pages']);
             } else {
                 return $response;
             }
-        }
-    }
-
-    public function ziai_import_articles($response)
-    {
-        if(!isset($response['errors'])){
-            foreach($response['data'] as $data){
-                $collection = wp_remote_get( 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
-                    array(
-                        'method' => 'GET',
-                        'headers' => array(
-                            'Authorization' => 'Bearer ' . $this->access_token
-                        )
-                    )
-                );
-
-                $collection = json_decode($collection['body'], true);
-                $article = array(
-                    'id' => $data['id'],
-                    'title' => $data['title'],
-                    'content' => $data['body'],
-                    'status'  => $data['state'],
-                    'collection' => $collection['name']
-                );
-                $this->ziai_create_article($article);
-            }
-            return array(
-                'status'   => 'success',
-                'message'  => 'Articles settings updated successfully!!',
-                'count'    => $this->ziai_added,
-                'episodes' => $this->ziai_imported,
-            );
-        }else{
+        } else {
             return array(
                 'status'   => 'errors',
                 'message'  => $response['errors'][0]->message,
@@ -102,9 +69,56 @@ class ZIAI_Handler
         }
     }
 
-    public function ziai_import_article()
+    public function ziai_import_articles($response)
     {
-        $response = wp_remote_get( 'https://api.intercom.io/articles/',
+        if (isset($response['errors'])) {
+            return [
+                'status' => 'errors',
+                'message' => $response['errors'][0]->message,
+            ];
+        } else {
+            // Get collection data from api for given article parent_id
+            foreach($response['data'] as $data){
+                // If the article exists, we don't need to call for the collection data
+                $article_exists = $this->is_article_imported($data['id']);
+                $collection = null;
+                if(!$article_exists){
+                    $this->create_update_article($data);
+                } else {
+                    //$article_wp_object = get_post($article_exists);
+                    $out_of_date = $this->is_article_outdated($article_exists, $data);
+                    if($out_of_date){
+                        $this->create_update_article($data);
+                    }
+                }
+            }
+            return array(
+                'status'   => 'success',
+                'message'  => 'Articles settings updated successfully!!',
+                'count'    => $this->ziai_added,
+                'episodes' => $this->ziai_imported,
+            );
+        }
+    }
+
+    /**
+     * Checks if a WordPress article is out of date with Intercom.
+     *
+     * @param int $article_id The post ID of the article.
+     * @param array $data An array of article data from the Intercom API.
+     * @return bool True if the article is outdated, false otherwise.
+     */
+    public function is_article_outdated(int $article_id, array $data): bool {
+        $article_wp_date_modified = get_post_meta($article_id, 'intercom_updated_at', true);
+        if($data['id'] == 6545905){
+            print_r($data);
+            return true;
+        }
+        return ($data['updated_at'] > $article_wp_date_modified);
+    }
+
+    public function get_collection_data($data){
+        $collection = wp_remote_get( 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
             array(
                 'method' => 'GET',
                 'headers' => array(
@@ -113,42 +127,55 @@ class ZIAI_Handler
             )
         );
 
-        $response = json_decode($response['body'], true);
-        if(!isset($response['errors'])){
-            foreach($response['data'] as $data){
-                $collection = wp_remote_get( 'https://api.intercom.io/help_center/collections/'.$data['parent_id'].'',
-                    array(
-                        'method' => 'GET',
-                        'headers' => array(
-                            'Authorization' => 'Bearer ' . $this->access_token
-                        )
-                    )
-                );
-                
-                $collection = json_decode($collection['body'], true);
-                $article = array(
-                    'id' => $data['id'],
-                    'title' => $data['title'],
-                    'content' => $data['body'],
-                    'status'  => $data['state'],
-                    'collection' => $collection['name']
-                );
-                $this->ziai_create_article($article);
-            }
-            return array(
-                'status'   => 'success',
-                'message'  => 'Articles settings updated successfully!!',
-                'count'    => $this->ziai_added,
-                'episodes' => $this->ziai_imported,
-            );
-        }else{
-            return array(
-                'status'   => 'errors',
-                'message'  => $response['errors'][0]->message,
-            );
-        }
+        return json_decode($collection['body'], true);
     }
 
+    /**
+     * Checks to see if an article has been previously imported into WordPress
+     *
+     * @param int $article_id The article_id as provided by the Intercom API
+     * @return int|bool The post ID of the matching post if found, or false if not found.
+     */
+    public function is_article_imported(int $article_id): bool|int
+    {
+        $exists = false;
+        $args = array(
+            'post_type' => $this->post_type,
+            'post_status' => array('publish', 'draft'),
+            'meta_query' => array(
+                array(
+                    'key' => 'zl_ziai_id',
+                    'value' => $article_id,
+                    'compare' => '=',
+                )
+            )
+        );
+
+        $already_added = get_posts($args);
+        if ($already_added) {
+            $exists = $already_added[0]->ID;
+        }
+
+        return $exists;
+    }
+
+    public function create_update_article($data){
+        if(isset($data['parent_id'])){
+            $collection = $this->get_collection_data($data);
+        }
+
+        $article = array(
+            'id' => $data['id'],
+            'title' => $data['title'],
+            'content' => $data['body'],
+            'status'  => $data['state'],
+            'created_at'  => $data['created_at'],
+            'updated_at'  => $data['updated_at'],
+            'collection'=> $collection['name'] ?? null,
+        );
+
+        $this->ziai_create_article($article);
+    }
     protected function ziai_create_article($article)
     {
         $post_data  = $this->ziai_get_post_data($article);
@@ -168,9 +195,13 @@ class ZIAI_Handler
         $this->ziai_imported[] = $post_data['post_title'];
     }
 
+
     public function ziai_get_post_data($article)
     {
-        $term_a      = term_exists($article['collection'], $this->taxonomy);
+        $term_a = false;
+        if(isset($article['collection'])){
+            $term_a      = term_exists($article['collection'], $this->taxonomy);
+        }
         $term_a_id   = $term_a['term_id'];
         if(empty($term_a_id)){
             wp_insert_term(
@@ -195,25 +226,14 @@ class ZIAI_Handler
         $post_data['post_category'] = array($term_id);
         $post_data['meta_input']    = array(
             'zl_ziai_id' => $article['id'],
+            'intercom_created_at' => $article['created_at'],
+            'intercom_updated_at' => $article['updated_at']
         );
 
-        $args = array(
-            'post_type' => $this->post_type,
-            'post_status' => array('publish', 'draft'),
-            'meta_query' => array(
-                array(
-                    'key' => 'zl_ziai_id',
-                    'value' => $article['id'],
-                    'compare' => '=',
-                )
-            )
-        );
-
-        $already_added = new WP_Query($args);
-        if ($already_added->have_posts()) {
-            $already_added->the_post();
-            $post_id = get_the_ID();
-            $post_data['ID'] = $post_id;
+        // Find the article in WP
+        $article_exists = $this->is_article_imported($article['id']);
+        if($article_exists ){
+            $post_data['ID'] = $article_exists;
         }
 
         return $post_data;

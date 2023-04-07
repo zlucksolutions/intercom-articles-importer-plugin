@@ -18,7 +18,12 @@
                     <div id="col-left">
                         <div class="col-wrap">
                             <div class="form-wrap">
-                                <p><?php _e($errormsg, 'ziai-articles'); ?></p>
+                                <?php
+                                if($errormsg) { ?>
+                                    <p><?php _e($errormsg, 'ziai-articles'); ?></p>
+                                <?php
+                                }
+                                ?>
                                 <form method="post" action="" class="validate zl-admin-form">
                                     <div class="zl-ziai-setting zl-setting-2">
                                         <div class="form-field form-required term-name-wrap">

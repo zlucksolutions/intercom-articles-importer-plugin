@@ -29,6 +29,7 @@ class ZIAI_Modules {
 
     public function ziai_admin_show_data() {
         if ( is_file(ZIAI_FILE_PATH . 'includes/wp-ziai-article-form.php') ) {
+            $errormsg = false;
             $token                      = get_option('zl_ziai_access_token');
             $post_type                  = get_option('zl_post_type_get');
             $category                   = get_option('zl_category_get');
@@ -60,13 +61,14 @@ class ZIAI_Modules {
                 if (isset($_POST['runnow'])) {
                     $arry = $this->get_ziai_options_array();
                     $importer_article 	= new ZIAI_Handler($arry);
-                    $response           = $importer_article->ziai_import_article();
-                    if ($response['status'] == 'errors') {
-                        $errormsg = $response['message'];
-                    } else {
-                        $errormsg = 'Message:- ' . $response['message'] . '<br>';
-                        $errormsg .= 'Episodes:- ' . $response['count'] .' Article Import';
-                        //$errormsg .= 'Episodes:- '.$response['episodes'];
+                    $response = $importer_article->sync_articles();
+                    if($response){
+                        if ($response['status'] == 'errors') {
+                            $errormsg = $response['message'];
+                        } else {
+                            $errormsg = 'Message:- ' . $response['message'] . '<br>';
+                            $errormsg .= 'Episodes:- ' . $response['count'] .' Article Import';
+                        }
                     }
                 }
             }
@@ -74,7 +76,7 @@ class ZIAI_Modules {
         }
     }
 
-    private function get_ziai_options_array(){
+    public function get_ziai_options_array(){
         $token                      = get_option('zl_ziai_access_token');
         $post_type                  = get_option('zl_post_type_get');
         $taxonomies                 = get_option('zl_taxonomy_get');
