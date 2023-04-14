@@ -51,20 +51,10 @@ class ZIAI_CronJob {
 	// hook that function onto our scheduled event:
 	public static function ziai_get_articles_using_cron()
 	{
-		// here's the function we'd like to call with our cron job
-		$token                      = get_option('zl_ziai_access_token');
-		$post_type                  = get_option('zl_post_type_get');
-		$category                   = get_option('zl_category_get');
-		$taxonomies                 = get_option('zl_taxonomy_get');
-		$zl_default_author          = get_option('zl_default_author');
-		$arry = array(
-			"access_token" => $token,
-			"import_post_type" => $post_type,
-			"import_author" => $zl_default_author,
-			"import_taxonomy" => $taxonomies,
-		);
-		$importer_article 	= new ZIAI_Handler($arry);
-		$importer_article->ziai_import_article();
+        $ZIAI_Modules = new ZIAI_Modules();
+		$arry = $ZIAI_Modules->get_ziai_options_array();
+        $importer_article 	= new ZIAI_Handler($arry);
+		$importer_article->sync_articles();
 	}
 }
 
