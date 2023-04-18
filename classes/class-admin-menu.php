@@ -22,7 +22,9 @@ class ZIAI_Modules {
     }
 
     public function ziai_load_admin_style() {
+        wp_enqueue_style( 'jquery-ui-progressbar', ZIAI_FILE_URL . 'assets/css/jquery-ui.css');
         wp_enqueue_style( 'ziai_admin_style_css', ZIAI_FILE_URL . 'assets/css/style-admin.css');
+        wp_enqueue_script('jquery-ui-progressbar');
         wp_enqueue_script('zl_admin_custom_script', ZIAI_FILE_URL . 'assets/js/zl-admin-custom.js', array('jquery'), '1.0', true);
         wp_localize_script('zl_admin_custom_script', 'wpAjax', array('ajaxUrl' => admin_url('admin-ajax.php')));
     }

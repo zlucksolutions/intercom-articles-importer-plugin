@@ -1,13 +1,13 @@
 <div class="wrap wp-ziai-article">
     <h1><?php esc_html_e('Automatic Articles Settings', 'ziai-articles'); ?></h1>
     <?php
-    wp_enqueue_script('jquery-ui-progressbar');
-    $wp_scripts = wp_scripts();
-    wp_enqueue_style('plugin_name-admin-ui-css',
-        'http://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
-        false,
-        1.0,
-        false);
+    // wp_enqueue_script('jquery-ui-progressbar');
+    // $wp_scripts = wp_scripts();
+    // wp_enqueue_style('plugin_name-admin-ui-css',
+    //     'http://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
+    //     false,
+    //     1.0,
+    //     false);
     ?>
     <div id="wpbody" role="main">
         <div id="wpbody-content">
