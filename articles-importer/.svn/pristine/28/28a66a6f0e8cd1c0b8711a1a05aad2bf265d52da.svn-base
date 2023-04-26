@@ -1,5 +1,5 @@
 	=== Automatic Articles Importer ===
-	Contributors: zluck, divyeshk71, robcruiz
+	Contributors: zluck, divyeshk71
 	Donate link: https://www.buymeacoffee.com/zluck
 	Tags: automatic articles importer, import intercom, sync intercom articles, sync articles
 	Requires at least: 5.4
@@ -13,17 +13,15 @@
 
 	== Description ==
 
-	Automatic Articles Importer is an easy, quick and advanced plugin to import intercom articles.
-
-	This plugin gives you ability to import the Intercom articles in your website easily. This plugin collects the intercom articles & collections from intercom and import on your website by collection wise.
+	Automatic Articles Importer is an easy, quick and advanced plugin to import intercom articles. This plugin gives you ability to import the Intercom articles in your website easily. This plugin collects the intercom articles & collections from intercom and import on your website by collection wise.
 
 
 	== Key Features ==
 
-	- Scheduled import process
-	- Import intercom articles
-	- Import intercom collection
-	- Sync articles regulary by cron
+	* Scheduled import process
+	* Import intercom articles
+	* Import intercom collection
+	* Sync articles regulary by cron
 
 
 	== Installation ==
@@ -64,11 +62,6 @@
 
 	== Changelog ==
 
-	= 1.1 =
-	* Ability to import all articles
-	* Added pagination
-	* Other minor bugs fixes
-	
 	= 1.0 =
 	* Initial Launch
 

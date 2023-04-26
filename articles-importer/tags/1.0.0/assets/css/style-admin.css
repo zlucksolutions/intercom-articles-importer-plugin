@@ -1,4 +1,4 @@
-.menu-icon-zl_ziai_article div img {
+.menu-icon-zl_ziai_article div img{
     width: 100%;
     height: auto;
     max-width: 70%;
@@ -58,9 +58,7 @@ form.zl-admin-form .form-field>label {
     border-bottom: unset;
 }
 
-
 /* Tool tip icon start*/
-
 .hint {
     display: inline-block;
     position: relative;
@@ -68,9 +66,7 @@ form.zl-admin-form .form-field>label {
     /*  margin-top: 0.3em; */
 }
 
-
 /* background style for 'i' */
-
 .hint-icon {
     background: #a5acb5;
     border-radius: 10px;
@@ -85,25 +81,19 @@ form.zl-admin-form .form-field>label {
     width: 20px;
 }
 
-
 /* hint icon hover style */
-
 .hint-icon:hover {
     background: #1170be;
     color: #fff;
 }
 
-
 /* Displays the hint. important! Do not remove. */
-
 .hint:hover .hint-description,
 .hint:focus .hint-description {
     display: inline-block;
 }
 
-
 /* position of the hint  */
-
 .hint-description {
     display: none;
     background: #f6f8fa;
@@ -123,9 +113,7 @@ form.zl-admin-form .form-field>label {
     line-height: 1.3;
 }
 
-
 /* styling for the arrow */
-
 .hint-description:before,
 .hint-description:after {
     content: "";
@@ -138,96 +126,9 @@ form.zl-admin-form .form-field>label {
     transform: translateX(-50%);
 }
 
-
 /* overlay styling */
-
-
-/* .hint-description:after {
+.hint-description:after {
     left: 50%;
     border-top-color: #f6f8fa;
     bottom: -20px;
-}
-
-.lds-dual-ring.hidden {
-    display: none;
-}
-
-.lds-dual-ring {
-    display: inline-block;
-    width: 80px;
-    height: 80px;
-}
-
-.lds-dual-ring:after {
-    content: " ";
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin: 23%;
-    margin-left: 51%;
-    border-radius: 50%;
-    border: 6px solid #fff;
-    border-color: #fff transparent #fff transparent;
-    animation: lds-dual-ring 1.2s linear infinite;
-}
-
-@keyframes lds-dual-ring {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(0, 0, 0, .8);
-    z-index: 999;
-    opacity: 1;
-    transition: all 0.5s;
-} */
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.zl-spinner::before {
-    content: '';
-    position: absolute;
-    background-color: #fbfbfc;
-    top: 4px;
-    left: 4px;
-    width: 6px;
-    height: 6px;
-    border: none;
-    border-radius: 100%;
-    transform-origin: 8px 8px;
-    animation-name: spin;
-    animation-duration: 1000ms;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-}
-
-.zl-spinner {
-    visibility: visible;
-    display: inline-block;
-    background-color: #23282d;
-    opacity: 0.75;
-    width: 24px;
-    height: 24px;
-    border: none;
-    border-radius: 100%;
-    padding: 0;
-    margin: 0 24px;
-    position: relative;
 }

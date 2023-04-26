@@ -4,7 +4,7 @@
  * Plugin Name: Automatic Articles Importer
  * Description: This plugin is used to import articles from Intercom Service.
  * Plugin URI: https://www.zluck.com/
- * Version: 1.1
+ * Version: 1.0
  * Author: Zluck Solutions
  * Author URI: https://profiles.wordpress.org/zluck
  * Text Domain: ziai-articles
@@ -21,6 +21,5 @@ include_once('classes/class-admin-menu.php');
 include_once('classes/class-article-import.php');
 include_once('classes/class-ziai-cron.php');
 
-$ZIAI_Modules  = new ZIAI_Modules();
-$ZIAI_Modules->ziai_init();
+ZIAI_Modules::ziai_init();
 ZIAI_CronJob::ziai_cron_init();

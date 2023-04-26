@@ -1,14 +1,5 @@
 <div class="wrap wp-ziai-article">
     <h1><?php esc_html_e('Automatic Articles Settings', 'ziai-articles'); ?></h1>
-    <?php
-    // wp_enqueue_script('jquery-ui-progressbar');
-    // $wp_scripts = wp_scripts();
-    // wp_enqueue_style('plugin_name-admin-ui-css',
-    //     'http://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
-    //     false,
-    //     1.0,
-    //     false);
-    ?>
     <div id="wpbody" role="main">
         <div id="wpbody-content">
             <div class="wrap nosubsub">
@@ -18,15 +9,8 @@
                     <div id="col-left">
                         <div class="col-wrap">
                             <div class="form-wrap">
-                                <?php
-                                if($errormsg) { ?>
-                                    <p><?php _e($errormsg, 'ziai-articles'); ?></p>
-                                <?php
-                                }
-                                ?>
+                                <p><?php _e($errormsg, 'ziai-articles'); ?></p>
                                 <form method="post" action="" class="validate zl-admin-form">
-                                    <div id="loader" class="lds-dual-ring hidden overlay"></div>
-                                    <div id="progressbar"></div><br>
                                     <div class="zl-ziai-setting zl-setting-2">
                                         <div class="form-field form-required term-name-wrap">
                                             <label for="ziai_access_token"><b><?php esc_html_e('Access Token', 'ziai-articles'); ?></b>
@@ -35,16 +19,7 @@
                                                     <div class="hint-description"><?php _e('Find details on how to find your Access Token <a href="https://developers.intercom.com/building-apps/docs/authentication-types#section-access-tokens" target="_blank">here.</a>', 'ziai-articles'); ?></div>
                                                 </div>
                                             </label>
-                                            <input name="ziai_access_token" id="ziai_access_token" type="text" <?php if($token != ''){ ?> value="<?php echo esc_attr($token); ?>" <?php } ?> aria-required="true" required/>
-                                        </div>
-                                        <br>
-                                        <div class="zl-button">
-                                            <!-- <div style="padding: 10px 0;"> -->
-                                            <p class="submit">
-                                                <button type="button" class="button button-primary" id="bulk-import">Import All</button><span class=""></span>
-                                            </p>
-                                            <!-- </div> -->
-                                            <div></div>
+                                            <input name="ziai_access_token" id="ziai_access_token" type="text" value="<?php echo esc_attr($token); ?>" aria-required="true" required/>
                                         </div>
                                     </div>
                                     <br>
@@ -90,24 +65,12 @@
                                             <?php
                                             wp_nonce_field('zl-ziai-settings-save', 'zl-ziai-settings');
                                             submit_button('Save Changes', 'primary', 'savechanges');
-                                            //submit_button('Save & Run Now', 'primary runnow', 'runnow');
+                                            submit_button('Save & Run Now', 'primary runnow', 'runnow');
                                             ?>
-                                            <!-- <div style="padding: 10px 0;"> -->
-                                            <!-- <p class="submit">
-                                                <button type="button" class="button button-primary" id="bulk-import">Import All</button><span class=""></span>
-                                            </p> -->
-                                            <!-- </div> -->
                                             <div></div>
                                         </div>
                                     </div>
                                 </form>
-                                <!-- <div>
-                                    <h5>Bulk Importer</h5>
-                                    <div id="progressbar"></div>
-                                    <div style="padding: 10px 0;">
-                                        <button class="button button-primary" id="bulk-import">Import All</button>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
                     </div>
